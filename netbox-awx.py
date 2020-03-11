@@ -2,6 +2,7 @@
 
 import json
 import requests
+import re
 
 # Netbox URL
 URL = ''
@@ -14,7 +15,7 @@ FILTER_TAGS = []
 
 headers = {
     'Accept': 'application/json ; indent=4',
-    'Authorization': 'Token %s' % (TOKEN),
+    'Authorization': 'Token %s' % TOKEN,
 }
 
 api_url = URL + '/api/dcim/devices/'
@@ -63,6 +64,10 @@ for i in devices:
             tags.setdefault(t, {'hosts': []})['hosts'].append(i['name'])
         if i['config_context']:
             hostvars.setdefault('_meta', {'hostvars': {}})['hostvars'][i['name']] = i['config_context']
+        if i['primary_ip4']:
+            match = re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}",i['primary_ip4']['address'])
+            ip = match.group()
+            hostvars.setdefault('_meta', {'hostvars': {}})['hostvars'][i['name']]['ansible_host'] = ip
 
 inventory.update(sites)
 inventory.update(racks)
