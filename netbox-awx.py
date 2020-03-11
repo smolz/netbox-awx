@@ -15,7 +15,7 @@ FILTER_TAGS = []
 
 headers = {
     'Accept': 'application/json ; indent=4',
-    'Authorization': 'Token %s' % TOKEN,
+    'Authorization': 'Token %s' % (TOKEN),
 }
 
 api_url = URL + '/api/dcim/devices/'
